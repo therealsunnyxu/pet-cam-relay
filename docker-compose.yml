@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mediamtx:
+    image: bluenviron/mediamtx:latest-ffmpeg
+    restart: unless-stopped
+    volumes:
+      - ./etc/letsencrypt:/etc/letsencrypt:ro
+      - ./mediamtx.yml:/mediamtx.yml:ro
+    ports:
+      - "1936:1936"      # RTMPS input
+    networks:
+      - relay_network
+
+
+  nginx:
+    image: nginx-with-auth-request
+    build: ./nginx_with_auth_request
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./etc/letsencrypt:/etc/letsencrypt:ro
+      - ./var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./portal/static:/home/static
+    depends_on:
+      - mediamtx
+    networks:
+      - relay_network
+    command: >
+      sh -c "nginx -g 'daemon off;'"
+
+  django:
+    image: django
+    build: ./portal
+    container_name: django
+    restart: unless-stopped
+    networks:
+      - relay_network
+    volumes:
+      - ./portal:/etc/portal
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "cd /etc/portal &&
+            gunicorn portal_config.wsgi --bind 0.0.0.0:8000"
+
+networks:
+  relay_network:
+    driver: bridge
