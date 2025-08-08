@@ -1,0 +1,11 @@
+.aws/
+*/**/.git/
+etc/
+var/
+*/**/venv/
+*/**/.env
+*/**/__pycache__/
+*/**/*.sqlite3
+*/**/*.sqlite
+*/**/*.db
+create_cert.sh
