@@ -61,6 +61,10 @@ class ChangeEmailInvalidTestCase(TestCase):
             ("missing old email", {"new_email": "new@example.com"}),
             ("missing new email", {"old_email": "test@example.com"}),
             ("both missing", {}),
+            (
+                "both emails the same",
+                {"old_email": "test@example.com", "new_email": "test@example.com"},
+            ),
         ]
     )
     def test_change_email_invalid_combinations(self, name, payload):

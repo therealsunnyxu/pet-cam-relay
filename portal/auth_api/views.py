@@ -110,6 +110,9 @@ def change_email_handler(request: HttpRequest):
     new_email: str = str(form.cleaned_data.get("new_email"))
     # Assumed to not be blank because by default, EmailField required is True and strip is True
 
+    if old_email == new_email:
+        return HttpResponse("New email cannot be the same as the old email", status=400)
+
     actual_old_email: str = str(user.email).strip()
 
     if actual_old_email != old_email:
