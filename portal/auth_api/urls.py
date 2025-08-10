@@ -13,5 +13,10 @@ urlpatterns = [
         views.password_reset_confirm_handler,
         name="password_reset_confirm",
     ),
+    path(
+        "password/reset/valid/<uidb64>/<token>/",
+        views.password_reset_validity_handler,
+        name="password_reset_valid",
+    ),
     path("check", views.auth_check_handler, name="auth-check"),
 ]

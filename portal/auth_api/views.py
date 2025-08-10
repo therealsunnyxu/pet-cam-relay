@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import (
     AuthenticationForm,
     PasswordChangeForm,
@@ -90,7 +89,7 @@ def csrf_token_handler(request: HttpRequest):
     return JsonResponse({"csrfToken": token})
 
 
-@login_required
+@require_http_methods(["POST"])
 def change_email_handler(request: HttpRequest):
     user: AbstractUser = request.user
 
@@ -126,7 +125,7 @@ def change_email_handler(request: HttpRequest):
     return HttpResponse(status=200)
 
 
-@login_required
+@require_http_methods(["POST"])
 def change_password_handler(request: HttpRequest):
     user: AbstractUser = request.user
 
@@ -160,6 +159,7 @@ def change_password_handler(request: HttpRequest):
     return HttpResponse(status=200)
 
 
+@require_http_methods(["POST"])
 def password_reset_request_handler(request: HttpRequest):
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
@@ -179,15 +179,13 @@ def password_reset_request_handler(request: HttpRequest):
     # Good for preventing guessing attacks
 
 
-@csrf_protect
-def password_reset_confirm_handler(request: HttpRequest, uidb64: str, token: str):
+def get_user_from_password_reset_params(uidb64: str, token: str) -> AbstractUser:
     try:
         uidb64 = str(uidb64)
         token = str(token)
     except Exception:
-        return HttpResponse(
-            content="The URL path must contain 'uidb64' and 'token' parameters",
-            status=400,
+        raise ValidationError(
+            "The URL path must contain 'uidb64' and 'token' parameters", code=400
         )
 
     # Verify that the uidb4 and token are valid
@@ -201,7 +199,42 @@ def password_reset_confirm_handler(request: HttpRequest, uidb64: str, token: str
         or (user.id is None)
         or (not PasswordResetConfirmTool.token_generator.check_token(user, token))
     ):
-        return HttpResponse(content="Invalid password reset request", status=400)
+        raise ValidationError("Invalid password reset request", code=400)
+
+    return user
+
+
+@csrf_protect
+@require_http_methods(["POST"])
+def password_reset_validity_handler(request: HttpRequest, uidb64: str, token: str):
+    try:
+        get_user_from_password_reset_params(uidb64, token)
+    except ValidationError as e:
+        msg = e.message
+        code = e.code
+        if msg is not None and code is not None:
+            return HttpResponse(content=msg, status=code)
+        return HttpResponse(status=400)
+    except Exception:
+        return HttpResponse(status=500)
+
+    return HttpResponse(status=200)
+
+
+@csrf_protect
+@require_http_methods(["POST"])
+def password_reset_confirm_handler(request: HttpRequest, uidb64: str, token: str):
+    user: AbstractUser = None
+    try:
+        user = get_user_from_password_reset_params(uidb64, token)
+    except ValidationError as e:
+        msg = e.message
+        code = e.code
+        if msg is not None and code is not None:
+            return HttpResponse(content=msg, status=code)
+        return HttpResponse(status=400)
+    except Exception:
+        return HttpResponse(status=500)
 
     # Check that the new password form is valid
     data: dict = get_data_from_json_or_formdata(request)
