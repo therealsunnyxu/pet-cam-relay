@@ -56,7 +56,7 @@ def merge_form_errors(form: forms.Form):
 def login_handler(request: HttpRequest):
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
-        return HttpResponse(content="Malformed JSON or form data", status=400)
+        return HttpResponse(content="Form data is malformed or missing", status=400)
 
     form: AuthenticationForm = AuthenticationForm(request, data=data)
 
@@ -98,7 +98,7 @@ def change_email_handler(request: HttpRequest):
 
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
-        return HttpResponse(content="Malformed JSON or form data", status=400)
+        return HttpResponse(content="Form data is malformed or missing", status=400)
 
     form: ChangeEmailForm = ChangeEmailForm(data)
 
@@ -137,7 +137,7 @@ def change_password_handler(request: HttpRequest):
 
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
-        return HttpResponse(content="Malformed JSON or form data", status=400)
+        return HttpResponse(content="Form data is malformed or missing", status=400)
 
     form: PasswordChangeForm = PasswordChangeForm(user, data)
 
@@ -166,7 +166,7 @@ def change_password_handler(request: HttpRequest):
 def password_reset_request_handler(request: HttpRequest):
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
-        return HttpResponse(content="Malformed JSON or form data", status=400)
+        return HttpResponse(content="Form data is malformed or missing", status=400)
 
     form: PasswordResetForm = PasswordResetForm(data)
     if not form.is_valid():
@@ -242,7 +242,7 @@ def password_reset_confirm_handler(request: HttpRequest, uidb64: str, token: str
     # Check that the new password form is valid
     data: dict = get_data_from_json_or_formdata(request)
     if data is None or len(data.keys()) == 0:
-        return HttpResponse(content="Malformed JSON or form data", status=400)
+        return HttpResponse(content="Form data is malformed or missing", status=400)
 
     form: SetPasswordForm = SetPasswordForm(user, data)
 

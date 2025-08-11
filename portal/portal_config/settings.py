@@ -24,7 +24,7 @@ DOTENV = dotenv_values(BASE_DIR / ".env")
 SECRET_KEY = DOTENV["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 USE_HTTPS = False
 
 ALLOWED_HOSTS = [
@@ -47,7 +47,19 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite SPA
     "http://127.0.0.1:5173",  # Vite SPA
 ]
+CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "https://pet-cam.therealsunnyxu.com",  # when deployed
+    "https://therealsunnyxu.com",  # when deployed
+    "https://localhost",  # NGINX
+    "https://127.0.0.1",  # NGINX
+    "http://127.0.0.1:8000",  # running the dev server directly
+    "http://localhost:8000",  # running the dev server directly
+    "http://localhost:5173",  # Vite SPA
+    "http://127.0.0.1:5173",  # Vite SPA
+]
 
 # Application definition
 
