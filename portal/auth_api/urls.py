@@ -9,14 +9,14 @@ urlpatterns = [
     path("user/password", views.change_password_handler, name="user_password"),
     path("password/reset", views.password_reset_request_handler, name="password_reset"),
     path(
+        "password/reset/confirm/<uidb64>/set-password/",
+        views.validate_password_reset_confirm_handler,
+        name="validate_password_reset_confirm",
+    ),
+    path(
         "password/reset/confirm/<uidb64>/<token>/",
         views.password_reset_confirm_handler,
         name="password_reset_confirm",
-    ),
-    path(
-        "password/reset/valid/<uidb64>/<token>/",
-        views.password_reset_validity_handler,
-        name="password_reset_valid",
     ),
     path("check", views.auth_check_handler, name="auth-check"),
 ]
