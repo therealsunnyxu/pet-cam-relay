@@ -109,9 +109,9 @@ authInternalUsers:
       # and NGINX reverse proxies the request,
       # NGINX's the one responsible for authentication using auth_request
       - action: read
-        path:
+        path: live
       - action: playback
-        path:
+        path: live
 
     # Default administrator.
     # This allows to use API, metrics and PPROF without authentication,

@@ -33,7 +33,7 @@ services:
       sh -c "nginx -g 'daemon off;'"
 
   django:
-    image: django
+    image: django-portal
     build: ./portal
     container_name: django
     restart: unless-stopped

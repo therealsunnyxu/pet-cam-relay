@@ -15,7 +15,7 @@ from django.forms import ValidationError, forms
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from auth_api.forms import ChangeEmailForm
 from portal_config import settings
 from typing import Union, Any
@@ -89,7 +89,9 @@ def logout_handler(request: HttpRequest):
 @require_http_methods(["GET"])
 def csrf_token_handler(request: HttpRequest):
     token = get_token(request)
-    return JsonResponse({"csrfToken": token})
+    res = HttpResponse(status=200)
+    res.set_cookie("csrftoken", token)
+    return res
 
 
 @require_http_methods(["POST"])
@@ -270,6 +272,7 @@ def validate_password_reset_confirm_handler(request: HttpRequest, uidb64: str):
     return HttpResponse(status=200)
 
 
+@csrf_exempt
 def auth_check_handler(request: HttpRequest):
     if request.user is None or request.user.id is None:
         # Django's automatic AnonymousUser doesn't have an id

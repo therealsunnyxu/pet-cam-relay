@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     "pet-cam.therealsunnyxu.com",
     "therealsunnyxu.com",
     "testserver",  # for Django unittest testing
+    "django",  # docker, NGINX
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -44,6 +45,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://127.0.0.1",  # NGINX
     "http://127.0.0.1:8000",  # running the dev server directly
     "http://localhost:8000",  # running the dev server directly
+    "http://django:8000",  # docker, NGINX
     "http://localhost:5173",  # Vite SPA
     "http://127.0.0.1:5173",  # Vite SPA
 ]
@@ -57,10 +59,15 @@ CSRF_TRUSTED_ORIGINS = [
     "https://127.0.0.1",  # NGINX
     "http://127.0.0.1:8000",  # running the dev server directly
     "http://localhost:8000",  # running the dev server directly
+    "http://django:8000",  # docker, NGINX
     "http://localhost:5173",  # Vite SPA
     "http://127.0.0.1:5173",  # Vite SPA
 ]
-
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
