@@ -47,6 +47,21 @@ services:
       sh -c "cd /etc/portal &&
             gunicorn portal_config.wsgi --bind 0.0.0.0:8000"
 
+<<<<<<< HEAD
+=======
+  stream_uri_manager:
+    image: stream-uri-manager
+    build: ./stream_uri_manager
+    container_name: stream_uri_manager
+    restart: unless-stopped
+    networks:
+      - relay_network
+    volumes:
+      - ./stream_uri_manager:/etc/stream_uri_manager
+    command: >
+      sh -c "cd /etc/stream_uri_manager && python3 -m mqtt"
+
+>>>>>>> 9c1f6b9 (server sends link instead)
 networks:
   relay_network:
     driver: bridge

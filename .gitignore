@@ -8,4 +8,5 @@ var/
 */**/*.sqlite3
 */**/*.sqlite
 */**/*.db
+*/**/awsiot_keys/
 create_cert.sh
