@@ -159,7 +159,7 @@ if __name__ == "__main__":
             stream_key_shadow.locked_data.request_tokens.add(token)
         publish_get_future.result()
 
-        stream_key = make_new_key(int(CONFIG["STREAM_KEY_LENGTH"]))
+        stream_key = CONFIG["STREAM_KEY"]#make_new_key(int(CONFIG["STREAM_KEY_LENGTH"]))
         stream_key_shadow.change_shadow_value(stream_key)
     except Exception as e:
         exit(e)
