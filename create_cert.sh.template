@@ -1,14 +1,8 @@
 docker run --rm \
     -e AWS_SHARED_CREDENTIALS_FILE=/root/.aws/config \
-<<<<<<< HEAD
-    -v "$(pwd -W)/.aws/credentials:/root/.aws/config" \
-    -v "$(pwd -W)/etc/letsencrypt:/etc/letsencrypt" \
-    -v "$(pwd -W)/var/lib/letsencrypt:/var/lib/letsencrypt" \
-=======
     -v "$(pwd)/.aws/credentials:/root/.aws/config" \
     -v "$(pwd)/etc/letsencrypt:/etc/letsencrypt" \
     -v "$(pwd)/var/lib/letsencrypt:/var/lib/letsencrypt" \
->>>>>>> 9c1f6b9 (server sends link instead)
     certbot/dns-route53 \
     certonly \
     --dns-route53 \
