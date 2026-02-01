@@ -1,3 +1,6 @@
+from datetime import datetime
+import sys
+from traceback import format_exc
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.forms import (
     AuthenticationForm,
@@ -14,15 +17,19 @@ from django.db.models import QuerySet
 from django.forms import ValidationError, forms
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
+from django.utils import http
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from auth_api.site_specific_token_tool import token_generator
 from auth_api.forms import ChangeEmailForm
 from portal_config import settings
 from typing import Union, Any
 import json
 
 User: AbstractUser = get_user_model()
-
+_PasswordResetConfirmTool = PasswordResetConfirmView()
+def get_user_from_uidb64(uidb64: Any) -> AbstractUser | None:
+    return _PasswordResetConfirmTool.get_user(uidb64)
 
 def get_data_from_json_or_formdata(request: HttpRequest):
     data: dict = None
@@ -180,14 +187,18 @@ def password_reset_request_handler(request: HttpRequest):
             errors, status=400
         )  # Only rejects if the emails are invalid formats, not if the email actually exists
 
-    form.save(request=request, use_https=settings.USE_HTTPS)
+    form.save(request=request, 
+        use_https=settings.USE_HTTPS, 
+        domain_override=settings.FRONTEND_DOMAIN_OVERRIDE,
+        email_template_name="auth_api/password_reset_email.j2",
+        extra_email_context={
+            "reset_route": settings.FRONTEND_PASSWORD_RESET_ROUTE
+        })
     # TODO: change the email template so that it points to the separate frontend
     # or just force a redirect to the frontend in the link to the route
     return HttpResponse(status=200)
-    # The form save will succeed regardless if the email actually exists, because of an internal for loop
-    # that just doesn't do anything if there's no email
+    # The form save will succeed regardless if the email actually exists
     # Good for preventing guessing attacks
-
 
 def get_user_from_password_reset_params(uidb64: str, token: str) -> AbstractUser:
     try:
@@ -198,13 +209,8 @@ def get_user_from_password_reset_params(uidb64: str, token: str) -> AbstractUser
             "The URL path must contain 'uidb64' and 'token' parameters", code=400
         )
 
-    # Verify that the uidb4 and token are valid
-    PasswordResetConfirmTool = (
-        PasswordResetConfirmView()
-    )  # use the functions inside the view instead of using the view
-    user: AbstractUser = PasswordResetConfirmTool.get_user(uidb64)
-
-    is_valid_token = PasswordResetConfirmTool.token_generator.check_token(user, token)
+    user: AbstractUser = get_user_from_uidb64(uidb64)
+    is_valid_token = token_generator.check_token(user, token)
     if (user is None) or (user.id is None) or (not is_valid_token):
         raise ValidationError("Invalid password reset request", code=400)
 
@@ -223,7 +229,7 @@ def password_reset_confirm_handler(request: HttpRequest, uidb64: str, token: str
         if msg is not None and code is not None:
             return HttpResponse(content=msg, status=code)
         return HttpResponse(status=400)
-    except Exception:
+    except Exception as e:
         return HttpResponse(status=500)
 
     request.session[INTERNAL_RESET_SESSION_TOKEN] = token

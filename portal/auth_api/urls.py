@@ -14,7 +14,7 @@ urlpatterns = [
         name="validate_password_reset_confirm",
     ),
     path(
-        "password/reset/confirm/<uidb64>/<token>/",
+        "password/reset/confirm/<uidb64>/<token>",
         views.password_reset_confirm_handler,
         name="password_reset_confirm",
     ),

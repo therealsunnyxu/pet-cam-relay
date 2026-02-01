@@ -22,7 +22,7 @@ DOTENV = dotenv_values(BASE_DIR / ".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = DOTENV["SECRET_KEY"]
-
+SECRET_KEY_FALLBACKS = [DOTENV["SECRET_KEY"],]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 USE_HTTPS = False
@@ -180,3 +180,9 @@ MIGRATION_MODULES = {"auth_api": "auth_api.migrations"}
 OTP_LENGTH = 6
 OTP_EXPIRY_MINUTES = 15
 OTP_GRACE_PERIOD_MINUTES = 1
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+FRONTEND_DOMAIN_OVERRIDE = "localhost:5173"
+FRONTEND_PASSWORD_RESET_ROUTE = "/reset-password"
+PASSWORD_RESET_TIMEOUT = 10 * 60 # seconds?

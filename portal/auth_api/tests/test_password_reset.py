@@ -9,6 +9,8 @@ from typing import Union
 import re
 import base64
 
+from portal_config import settings
+
 User: AbstractUser = get_user_model()
 
 
@@ -43,15 +45,13 @@ def extract_password_reset_confirm_params_from_email(
     else:
         raise ValueError("Not a str or django.core.mail.EmailMessage")
 
-    password_reset_confirm_url = reverse(
-        "password_reset_confirm", args=[".+", ".+"]
-    ).replace("/.+/.+/", "")
-    url_regex = re.escape(password_reset_confirm_url) + r"\/.+\/.+\/"
+    password_reset_confirm_url = settings.FRONTEND_PASSWORD_RESET_ROUTE
+    url_regex = re.escape(password_reset_confirm_url) + r"\/.*\/.*"
     reset_url_match = re.search(url_regex, email_body)
     reset_url = reset_url_match.group()
 
     # Extract the uidb4 and token params
-    param_str = reset_url.replace(password_reset_confirm_url, "")[1:-1]
+    param_str = reset_url.replace(password_reset_confirm_url, "")[1:]
     params = param_str.split("/")
     return params
 
@@ -479,7 +479,7 @@ class PasswordResetConfirmTestCase(TestCase):
         )
         self.assertEqual(response.status_code // 10, 40)
 
-    def test_valid_request_accepts(self):
+    def test_magic_link_accepts(self):
         user_reset_email = make_password_reset_request_email(
             self.password_reset_url, self.client, self.user
         )
@@ -491,10 +491,29 @@ class PasswordResetConfirmTestCase(TestCase):
             "password_reset_confirm",
             args=[user_uidb64, user_token],
         )
-        self.client.post(
+        response = self.client.post(
             password_reset_confirm_url,
             content_type="application/json",
         )
+        self.assertEqual(response.status_code // 10, 20, f"Failed: received {response.status_code} because {response.content.decode('utf-8')}")
+
+    def test_change_password_accepts(self):
+        user_reset_email = make_password_reset_request_email(
+            self.password_reset_url, self.client, self.user
+        )
+        user_uidb64, user_token = extract_password_reset_confirm_params_from_email(
+            user_reset_email
+        )
+
+        password_reset_confirm_url = reverse(
+            "password_reset_confirm",
+            args=[user_uidb64, user_token],
+        )
+        response = self.client.post(
+            password_reset_confirm_url,
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code // 10, 20, "Magic link route should not have rejected")
 
         new_password = "foobarfoobar123"
         validate_password_reset_confirm_url = reverse(
@@ -509,7 +528,7 @@ class PasswordResetConfirmTestCase(TestCase):
             },
             content_type="application/json",
         )
-        self.assertEqual(response.status_code // 10, 20)
+        self.assertEqual(response.status_code // 10, 20, "Password change should not have rejected")
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password(new_password))
 
