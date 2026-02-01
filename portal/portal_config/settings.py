@@ -183,6 +183,6 @@ OTP_GRACE_PERIOD_MINUTES = 1
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-FRONTEND_DOMAIN_OVERRIDE = "localhost:5173"
+FRONTEND_DOMAIN_OVERRIDE = "localhost:5173" # CHANGE IN PRODUCTION
 FRONTEND_PASSWORD_RESET_ROUTE = "/reset-password"
 PASSWORD_RESET_TIMEOUT = 10 * 60 # seconds?
