@@ -48,6 +48,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://django:8000",  # docker, NGINX
     "http://localhost:5173",  # Vite SPA
     "http://127.0.0.1:5173",  # Vite SPA
+    "http://localhost:4173",  # Vite SPA
+    "http://127.0.0.1:4173",  # Vite SPA
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -62,6 +64,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://django:8000",  # docker, NGINX
     "http://localhost:5173",  # Vite SPA
     "http://127.0.0.1:5173",  # Vite SPA
+    "http://localhost:4173",  # Vite SPA
+    "http://127.0.0.1:4173",  # Vite SPA
 ]
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SECURE = True
