@@ -25,7 +25,7 @@ SECRET_KEY = DOTENV["SECRET_KEY"]
 SECRET_KEY_FALLBACKS = [DOTENV["SECRET_KEY"],]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-USE_HTTPS = False
+USE_HTTPS = False # CHANGE IN PRODUCTION
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
