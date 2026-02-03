@@ -30,7 +30,7 @@ USE_HTTPS = True if DOTENV["USE_HTTPS"] == "True" else False
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "pet-cam-api.therealsunnyxu.com",
+    "pet-cam-relay.therealsunnyxu.com",
     "pet-cam.therealsunnyxu.com",
     "therealsunnyxu.com",
     "therealsunnyxu.github.io",
@@ -39,10 +39,10 @@ ALLOWED_HOSTS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "https://pet-cam-relay.therealsunnyxu.com",  # when deployed
     "https://pet-cam.therealsunnyxu.com",  # when deployed
     "https://therealsunnyxu.com",  # when deployed
-    "http://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "http://pet-cam-relay.therealsunnyxu.com",  # when deployed
     "http://pet-cam.therealsunnyxu.com",  # when deployed
     "http://therealsunnyxu.com",  # when deployed
     "http://therealsunnyxu.github.io",
@@ -59,10 +59,10 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "https://pet-cam-relay.therealsunnyxu.com",  # when deployed
     "https://pet-cam.therealsunnyxu.com",  # when deployed
     "https://therealsunnyxu.com",  # when deployed
-    "http://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "http://pet-cam-relay.therealsunnyxu.com",  # when deployed
     "http://pet-cam.therealsunnyxu.com",  # when deployed
     "http://therealsunnyxu.com",  # when deployed
     "http://therealsunnyxu.github.io",
