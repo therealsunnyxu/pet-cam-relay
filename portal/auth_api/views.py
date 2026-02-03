@@ -190,7 +190,10 @@ def password_reset_request_handler(request: HttpRequest):
     form.save(request=request, 
         use_https=settings.USE_HTTPS, 
         domain_override=settings.FRONTEND_DOMAIN_OVERRIDE,
-        email_template_name="auth_api/password_reset_email.j2",
+        from_email=settings.FROM_EMAIL,
+        subject_template_name="auth_api/password_reset_subject.txt",
+        email_template_name="auth_api/password_reset_email.html.j2",
+        html_email_template_name="auth_api/password_reset_email.html.j2",
         extra_email_context={
             "reset_route": settings.FRONTEND_PASSWORD_RESET_ROUTE
         })
