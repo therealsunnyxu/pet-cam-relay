@@ -41,6 +41,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://pet-cam-api.therealsunnyxu.com",  # when deployed
     "https://pet-cam.therealsunnyxu.com",  # when deployed
     "https://therealsunnyxu.com",  # when deployed
+    "http://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "http://pet-cam.therealsunnyxu.com",  # when deployed
+    "http://therealsunnyxu.com",  # when deployed
+    "http://therealsunnyxu.github.io",
     "https://localhost",  # NGINX
     "https://127.0.0.1",  # NGINX
     "http://127.0.0.1:8000",  # running the dev server directly
@@ -57,6 +61,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://pet-cam-api.therealsunnyxu.com",  # when deployed
     "https://pet-cam.therealsunnyxu.com",  # when deployed
     "https://therealsunnyxu.com",  # when deployed
+    "http://pet-cam-api.therealsunnyxu.com",  # when deployed
+    "http://pet-cam.therealsunnyxu.com",  # when deployed
+    "http://therealsunnyxu.com",  # when deployed
+    "http://therealsunnyxu.github.io",
     "https://localhost",  # NGINX
     "https://127.0.0.1",  # NGINX
     "http://127.0.0.1:8000",  # running the dev server directly
