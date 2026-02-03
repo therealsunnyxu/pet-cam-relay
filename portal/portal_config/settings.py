@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     "pet-cam-api.therealsunnyxu.com",
     "pet-cam.therealsunnyxu.com",
     "therealsunnyxu.com",
+    "therealsunnyxu.github.io",
     "testserver",  # for Django unittest testing
     "django",  # docker, NGINX
 ]
