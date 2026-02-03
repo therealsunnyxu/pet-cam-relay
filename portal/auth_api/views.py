@@ -83,8 +83,10 @@ def login_handler(request: HttpRequest):
         return JsonResponse(form.get_invalid_login_error(), status=401)
 
     login(request, user)
-
-    return HttpResponse("Logged in", status=200)
+    csrf_token = get_token(request)
+    response = JsonResponse({"message": "Logged in", "csrftoken": csrf_token}, status=200)
+    response.set_cookie("csrftoken", csrf_token)
+    return response
 
 
 @require_http_methods(["POST"])
@@ -96,7 +98,8 @@ def logout_handler(request: HttpRequest):
 @require_http_methods(["GET"])
 def csrf_token_handler(request: HttpRequest):
     token = get_token(request)
-    res = HttpResponse(status=200)
+    res = JsonResponse({"csrftoken": token}, status=200)
+    res.delete_cookie("csrftoken")
     res.set_cookie("csrftoken", token)
     return res
 
